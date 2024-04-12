@@ -204,3 +204,69 @@ function printpdf() {
     var info = document.getElementById("custinfo");
     info.value = value1;
   }
+
+  function printpdf() {
+    var content = document.getElementById("resume");
+    
+    // Hide add and rem buttons
+    const allButtons = document.querySelectorAll("#print button");
+    allButtons.forEach(button => {
+        button.style.display = "none";
+    });
+
+    // Hide input checkboxes
+    let allInputCheckboxes = document.querySelectorAll(".input-checkbox");
+    allInputCheckboxes.forEach(input => {
+        input.style.display = "none";
+    });
+    
+    // Generate PDF
+    html2pdf(content, {
+        html2canvas: { scale: 1, logging: true, dpi: 500 },
+        onComplete: function() {
+            // Show buttons and input checkboxes after PDF generation
+            allButtons.forEach(button => {
+                button.style.display = "inline-block";
+            });
+            allInputCheckboxes.forEach(input => {
+                input.style.display = "inline-block";
+            });
+        }
+    });
+}
+
+// Array of preset layout options (file paths or URLs)
+var layouts = [
+    'resume-bg-1-whitepage.avif',
+    'resume-bg-2-dualtone.jpg',
+    'resume-bg-3-diagonalcorner.jpg',
+    'resume-bg-4-beigepalette.png',
+    'resume-bg-5-gradientbluefade.png',
+    'resume-bg-6-blackcelestial.png',
+    'resume-bg-7-updowndualtone-x.jpg'
+];
+
+// Function to display layout options
+function displayLayoutOptions() {
+    var layoutOptionsContainer = document.getElementById('layout-options');
+    layoutOptionsContainer.innerHTML = ''; // Clear previous options
+
+    // Generate layout thumbnails
+    layouts.forEach(function(layout, index) {
+        var layoutThumbnail = document.createElement('img');
+        layoutThumbnail.src = layout;
+        layoutThumbnail.alt = 'Layout ' + (index + 1);
+        layoutThumbnail.classList.add('layout-thumbnail');
+
+        // Attach click event to select layout
+        layoutThumbnail.addEventListener('click', function() {
+            document.getElementById('print').style.backgroundImage = 'url(' + layout + ')';
+            document.getElementById('print').style.backgroundSize = 'cover';
+        });
+
+        layoutOptionsContainer.appendChild(layoutThumbnail);
+    });
+}
+
+// Call the function to display layout options when the page loads
+displayLayoutOptions();
